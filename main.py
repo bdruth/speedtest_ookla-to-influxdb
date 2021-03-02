@@ -4,6 +4,7 @@ import json
 import datetime
 import subprocess
 from pythonping import ping
+from tcp_latency import measure_latency
 from influxdb import InfluxDBClient
 from multiprocessing import Process
 
@@ -202,8 +203,32 @@ def pingtest():
         else:  # Speedtest failed.
             print("Ping Failed.")
 
+def pingtesttcp():
+    timestamp = datetime.datetime.utcnow()
+    for target in PING_TARGETS.split(','):
+        target = target.strip()
+        pingtest = measure_latency(host=target, runs=1, timeout=1)
+        data = [
+            {
+                'measurement': 'pings',
+                'time': timestamp,
+                'tags': {
+                    'namespace': NAMESPACE,
+                    'target' : target
+                },
+                'fields': {
+                    'success' : int(pingtest[0] is None),
+                    'rtt': float(0 if pingtest[0] is None else pingtest[0])
+                }
+            }
+        ]
+        if influxdb_client.write_points(data) == True:
+            print("Ping data written to DB successfully")
+        else:  # Speedtest failed.
+            print("Ping Failed.")
+
 def main():
-    pPing = Process(target=pingtest)
+    pPing = Process(target=pingtesttcp)
     pSpeed = Process(target=speedtest)
 
     init_db()  # Setup the database if it does not already exist.
