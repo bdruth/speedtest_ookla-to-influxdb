@@ -21,6 +21,8 @@ PING_TARGETS = os.getenv('PING_TARGETS', '1.1.1.1, 8.8.8.8')
 # Speedtest Settings
 # Time between tests (in minutes, converts to seconds).
 TEST_INTERVAL = int(os.getenv('SPEEDTEST_INTERVAL', '5')) * 60
+# Time to delay initial test (in minutes)
+TEST_DELAY = int(os.getenv('SPEEDTEST_DELAY', '0')) * 60
 # Time before retrying a failed Speedtest (in minutes, converts to seconds).
 TEST_FAIL_INTERVAL = int(os.getenv('SPEEDTEST_FAIL_INTERVAL', '5')) * 60
 # Specific server ID
@@ -241,14 +243,15 @@ def main():
             pPing = Process(target=pingtest)
             pPing.start()
 
-        if loopcount == 0 or loopcount % TEST_INTERVAL == 0:
+        if loopcount == (0 + TEST_DELAY) or loopcount % TEST_INTERVAL == 0:
             if pSpeed.is_alive():
                 pSpeed.terminate()
             pSpeed = Process(target=speedtest)
             pSpeed.start()
 
-        if loopcount % ( PING_INTERVAL * TEST_INTERVAL ) == 0:
+        if loopcount != 0 and loopcount % ( PING_INTERVAL * TEST_INTERVAL ) == 0:
             loopcount = 0
+            TEST_DELAY = 0
 
         time.sleep(1)
         loopcount += 1
