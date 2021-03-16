@@ -7,8 +7,11 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN true &&\
 \
 # Install dependencies
+apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 379CE192D401AB61 && \
+echo "deb https://ookla.bintray.com/debian buster main" | tee  /etc/apt/sources.list.d/speedtest.list && \
+
 apt-get update && \
-apt-get -q -y install --no-install-recommends apt-utils gnupg1 apt-transport-https dirmngr && \
+apt-get -q -y install --no-install-recommends apt-utils gnupg1 apt-transport-https dirmngr speedtest && \
 \
 # Install Python packages
 pip3 install pythonping influxdb tcp-latency && \
