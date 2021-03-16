@@ -237,6 +237,7 @@ def main():
     init_db()  # Setup the database if it does not already exist.
 
     loopcount = 0
+    hasDelayed = False
     while (1):  # Run a Speedtest and send the results to influxDB indefinitely.
         if loopcount == 0 or loopcount % PING_INTERVAL == 0:
             if pPing.is_alive():
@@ -244,15 +245,15 @@ def main():
             pPing = Process(target=pingtest)
             pPing.start()
 
-        if loopcount == (0 + TEST_DELAY) or loopcount % TEST_INTERVAL == 0:
+        if hasDelayed and (loopcount == 0 or loopcount % TEST_INTERVAL == 0):
             if pSpeed.is_alive():
                 pSpeed.terminate()
             pSpeed = Process(target=speedtest)
             pSpeed.start()
 
-        if loopcount != 0 and loopcount % ( PING_INTERVAL * TEST_INTERVAL ) == 0:
+        if loopcount == TEST_DELAY or (loopcount % ( PING_INTERVAL * TEST_INTERVAL ) == 0):
             loopcount = 0
-            TEST_DELAY = 0
+            hasDelayed = True
 
         time.sleep(1)
         loopcount += 1
