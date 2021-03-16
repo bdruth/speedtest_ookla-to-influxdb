@@ -230,6 +230,7 @@ def pingtesttcp():
             print("Ping Failed.")
 
 def main():
+    global TEST_DELAY
     pPing = Process(target=pingtesttcp)
     pSpeed = Process(target=speedtest)
 
