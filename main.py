@@ -245,7 +245,7 @@ def main():
             pPing = Process(target=pingtest)
             pPing.start()
 
-        if loopcount == TEST_DELAY
+        if loopcount == TEST_DELAY:
             hasDelayed = True
 
         if hasDelayed and (loopcount == 0 or loopcount % TEST_INTERVAL == 0):
