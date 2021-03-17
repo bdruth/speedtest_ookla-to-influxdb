@@ -245,15 +245,17 @@ def main():
             pPing = Process(target=pingtest)
             pPing.start()
 
+        if loopcount == TEST_DELAY
+            hasDelayed = True
+
         if hasDelayed and (loopcount == 0 or loopcount % TEST_INTERVAL == 0):
             if pSpeed.is_alive():
                 pSpeed.terminate()
             pSpeed = Process(target=speedtest)
             pSpeed.start()
-
-        if loopcount == TEST_DELAY or (loopcount % ( PING_INTERVAL * TEST_INTERVAL ) == 0):
+            
+        if loopcount % ( PING_INTERVAL * TEST_INTERVAL ) == 0:
             loopcount = 0
-            hasDelayed = True
 
         time.sleep(1)
         loopcount += 1
