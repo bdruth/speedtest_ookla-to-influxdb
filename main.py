@@ -23,7 +23,7 @@ PING_TARGETS = os.getenv('PING_TARGETS', '1.1.1.1, 8.8.8.8')
 TEST_INTERVAL = int(os.getenv('SPEEDTEST_INTERVAL', '5')) * 60
 # Time to delay initial test (in minutes)
 TEST_DELAY = int(os.getenv('SPEEDTEST_DELAY', '0')) * 60
-print('TEST_DELAY set to ' + TEST_DELAY)
+print('TEST_DELAY set to {}'.format(TEST_DELAY))
 # Time before retrying a failed Speedtest (in minutes, converts to seconds).
 TEST_FAIL_INTERVAL = int(os.getenv('SPEEDTEST_FAIL_INTERVAL', '5')) * 60
 # Specific server ID
@@ -249,7 +249,7 @@ def main():
         if loopcount == TEST_DELAY:
             hasDelayed = True
         else:
-            print('Delaying speedtest, TEST_DELAY = ' + TEST_DELAY + ', loopcount = ' + loopcount)
+            print('Delaying speedtest, TEST_DELAY = {}, loopcount = {}'.format(TEST_DELAY,loopcount))
 
         if hasDelayed and (loopcount == 0 or loopcount % TEST_INTERVAL == 0):
             if pSpeed.is_alive():
