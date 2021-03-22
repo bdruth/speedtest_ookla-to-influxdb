@@ -248,6 +248,7 @@ def main():
 
         if loopcount == TEST_DELAY:
             hasDelayed = True
+            loopcount = 0
         else:
             print('Delaying speedtest, TEST_DELAY = {}, loopcount = {}'.format(TEST_DELAY,loopcount))
 
